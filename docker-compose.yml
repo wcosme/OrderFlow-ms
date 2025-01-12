@@ -1,0 +1,42 @@
+services:
+  orderflow-ms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: orderflow-ms
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb-orderflow:27017/orderflow
+    depends_on:
+      - mongodb-orderflow
+    networks:
+      - orderflow-network
+
+  mongodb-orderflow:
+    image: mongo:5.0
+    container_name: mongodb-orderflow
+    ports:
+      - "27017:27017"
+    networks:
+      - orderflow-network
+    volumes:
+      - mongodb_orderflow_data:/data/db
+
+  redis-orderflow:
+    image: redis:7
+    container_name: redis-orderflow
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_orderflow_data:/data
+    networks:
+      - orderflow-network
+
+networks:
+  orderflow-network:
+    driver: bridge
+
+volumes:
+  mongodb_orderflow_data:
+  redis_orderflow_data:

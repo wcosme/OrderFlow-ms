@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: "Order Flow MS"
+
+server:
+  servlet:
+    context-path: "/${APPLICATION_PREFIX:orderflow/v1}"
+
+logging:
+  level:
+    root: INFO
+    org:
+      mongodb:
+        driver: WARN
+      apache: ERROR
+      springframework:
+        web: ERROR
+        boot: INFO
