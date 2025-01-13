@@ -10,25 +10,26 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-
 @Tag(name = "order", description = "Gestão de pedidos")
 public interface OrderController {
 
+    @GetMapping(value = "/orders")
     @Operation(summary = "Consulta todos os pedidos", tags = "order")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "successful operation"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessException.class)))
     })
-    @GetMapping(value = "/orders")
-    ResponseEntity<List<OrderResponseDto>> getOrders();
+    ResponseEntity<Page<OrderResponseDto>> getOrders(Pageable pageable);
+
 
     @Operation(summary = "Cria um novo pedido", tags = "order")
     @ApiResponses(value = {

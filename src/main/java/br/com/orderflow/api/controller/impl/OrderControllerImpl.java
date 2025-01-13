@@ -3,35 +3,36 @@ package br.com.orderflow.api.controller.impl;
 import br.com.orderflow.api.controller.OrderController;
 import br.com.orderflow.application.port.input.dto.request.OrderRequestDto;
 import br.com.orderflow.application.port.input.dto.response.OrderResponseDto;
-import br.com.orderflow.application.service.CreateOrderUseCaseImpl;
+import br.com.orderflow.application.port.input.usecase.CreateOrderUseCase;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
+@AllArgsConstructor
 @RestController
 public class OrderControllerImpl implements OrderController {
 
-    private CreateOrderUseCaseImpl createOrderUseCase;
-
-    public OrderControllerImpl(CreateOrderUseCaseImpl createOrderUseCase) {
-        this.createOrderUseCase = createOrderUseCase;
-    }
+    private final CreateOrderUseCase createOrderUseCase;
 
     @Override
-    public ResponseEntity<List<OrderResponseDto>> getOrders() {
-        return null;
+    public ResponseEntity<Page<OrderResponseDto>> getOrders(Pageable pageable) {
+        Page<OrderResponseDto> response = createOrderUseCase.getAllOrders(pageable);
+        return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<OrderResponseDto> createOrder(OrderRequestDto orderRequest) {
-        OrderResponseDto response = createOrderUseCase.execute(orderRequest);
+        OrderResponseDto response = createOrderUseCase.createOrder(orderRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Override
     public ResponseEntity<OrderResponseDto> getOrderById(String id) {
-        return null;
+        OrderResponseDto response = createOrderUseCase.getOrderById(id);
+        return ResponseEntity.ok(response);
     }
 }
+
