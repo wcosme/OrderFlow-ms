@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication(scanBasePackages = "br.com.orderflow")
@@ -14,6 +15,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 				description = "API de gerenciamento de pedidos com MongoDB e Kafka"
 		)
 )
+@EnableCaching
 public class OrderFlowMsApplication {
 
 	public static void main(String[] args) {

@@ -11,12 +11,12 @@ import br.com.orderflow.shared.exception.BusinessException;
 import br.com.orderflow.shared.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 @AllArgsConstructor
 @Service
@@ -53,6 +53,7 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
                 .map(order -> modelMapper.map(order, OrderResponseDto.class));
     }
 
+    @Cacheable(value = "orders", key = "#id")
     @Override
     public OrderResponseDto getOrderById(String id) {
         Order order = orderPersistence.findById(id)

@@ -3,6 +3,12 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/orderflow
 
+    redis:
+      host: localhost
+      port: 6379
+      repositories:
+        enabled: false
+
 springdoc:
   api-docs:
     path: /v3/api-docs
