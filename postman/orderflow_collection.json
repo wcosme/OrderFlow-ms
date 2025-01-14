@@ -1,0 +1,98 @@
+{
+	"info": {
+		"_postman_id": "89879e47-8957-4b94-b9e8-529c8510ffb8",
+		"name": "Order Flow MS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2894095"
+	},
+	"item": [
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Find All",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_SERVER}}/orderflow/v1/orders",
+							"host": [
+								"{{API_SERVER}}"
+							],
+							"path": [
+								"orderflow",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_SERVER}}/orderflow/v1/orders/d8312b15-ca4f-4a75-b67d-203cb48df9fd",
+							"host": [
+								"{{API_SERVER}}"
+							],
+							"path": [
+								"orderflow",
+								"v1",
+								"orders",
+								"d8312b15-ca4f-4a75-b67d-203cb48df9fd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"customerId\": \"customer-456\",\r\n  \"products\": [\r\n    {\r\n      \"productId\": \"product-001\",\r\n      \"productName\": \"Notebook Dell Inspiron\",\r\n      \"price\": 1500.00,\r\n      \"quantity\": 1\r\n    },\r\n    {\r\n      \"productId\": \"product-002\",\r\n      \"productName\": \"Mouse Gamer Logitech\",\r\n      \"price\": 250.00,\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_SERVER}}/orderflow/v1/orders",
+							"host": [
+								"{{API_SERVER}}"
+							],
+							"path": [
+								"orderflow",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

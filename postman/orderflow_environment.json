@@ -1,0 +1,15 @@
+{
+	"id": "b38d9b9e-cf70-4835-8c78-f1e730324c0c",
+	"values": [
+		{
+			"key": "API_SERVER",
+			"value": "localhost:8080",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2025-01-14T23:32:39.842Z",
+	"_postman_exported_using": "Postman/11.27.4"
+}
