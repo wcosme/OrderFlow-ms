@@ -11,6 +11,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Order {
 
     private String id;
@@ -19,31 +20,27 @@ public class Order {
     private BigDecimal totalValue;
     private OrderStatus status;
 
-    // Construtor customizado
     public Order(List<Product> products) {
         this.id = UUID.randomUUID().toString();
         this.products = products;
         calculateTotalValue();
     }
 
-    // Método para calcular o valor total do pedido
-    private void calculateTotalValue() {
+    public static Order buildOrder(String id, String customerId, List<Product> products, OrderStatus status) {
+        Order order = Order.builder()
+                .id(id)
+                .customerId(customerId)
+                .products(products)
+                .status(status)
+                .build();
+        order.calculateTotalValue();
+        return order;
+    }
+
+    public void calculateTotalValue() {
         this.totalValue = products.stream()
                 .map(Product::calculateTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    // Sobrescrevendo equals() e hashCode() para evitar conflitos
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
-        return id.equals(order.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
 }

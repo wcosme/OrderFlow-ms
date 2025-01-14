@@ -3,7 +3,6 @@ package br.com.orderflow.application.service;
 import br.com.orderflow.application.port.input.dto.request.OrderRequestDto;
 import br.com.orderflow.application.port.input.dto.response.OrderResponseDto;
 import br.com.orderflow.application.port.input.usecase.CreateOrderUseCase;
-import br.com.orderflow.application.port.output.OrderRepositoryPort;
 import br.com.orderflow.domain.entity.Order;
 import br.com.orderflow.infrastructure.persistence.repository.OrderPersistence;
 import br.com.orderflow.shared.exception.BusinessException;
@@ -23,6 +22,7 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
     @Override
     public OrderResponseDto createOrder(OrderRequestDto orderRequest) {
         Order order = modelMapper.map(orderRequest, Order.class);
+        order.calculateTotalValue();
         orderPersistence.save(order);
         return modelMapper.map(order, OrderResponseDto.class);
     }
