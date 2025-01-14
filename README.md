@@ -6,7 +6,7 @@ O **OrderFlow-ms** é um serviço responsável pelo gerenciamento de pedidos. El
 ---
 
 ### 🚧 **Status do Projeto**
-🛠️ O projeto está em construção. Estamos atualmente desenvolvendo as funcionalidades principais e integrando com o sistema de mensageria utilizando Kafka e o banco de dados MongoDB.
+🛠️ O projeto está em construção. Estamos atualmente desenvolvendo as funcionalidades principais.
 
 ---
 
@@ -30,7 +30,6 @@ O projeto segue o padrão de **Arquitetura Hexagonal**, separando a lógica de n
 - **ModelMapper**
 - **JUnit 5**
 - **Mockito**
-- **Apache Kafka**
 - **MongoDB**
 - **Redis**
 
@@ -110,6 +109,16 @@ Para esse projeto, foi escolhido o **MongoDB** como banco de dados principal, de
 ### 🛠️ **Melhorias Futuras**
 - Implementar autenticação com **Spring Security**
 - Configurar monitoramento com **Prometheus** e **Grafana**
+- **Integração com Kafka:** Implementar um fluxo assíncrono utilizando Apache Kafka para melhorar a escalabilidade e a resiliência do sistema.
+- **Integração com Redis:** Utilizar o Redis como cache para otimizar a performance e reduzir o tempo de resposta das consultas.
+
+---
+
+### 📄 **Documentação da API**
+A documentação da API está disponível através do Swagger UI, que pode ser acessado pela seguinte URL:
+```
+http://localhost:8080/orderflow/v1/swagger-ui/index.html
+```
 
 ---
 
