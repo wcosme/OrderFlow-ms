@@ -30,13 +30,11 @@ public class ModelMapperConfig {
 				.setMatchingStrategy(MatchingStrategies.STRICT)
 				.setSkipNullEnabled(true);
 
-		// ✅ Converter para OrderRequestDto -> Order
 		mapper.addConverter(new Converter<OrderRequestDto, Order>() {
 			@Override
 			public Order convert(MappingContext<OrderRequestDto, Order> context) {
 				OrderRequestDto source = context.getSource();
 
-				// Convertendo a lista de ProductDto para Product
 				List<Product> products = source.products().stream()
 						.map(productDto -> new Product(
 								productDto.productId(),
@@ -45,24 +43,21 @@ public class ModelMapperConfig {
 								productDto.quantity()))
 						.toList();
 
-				// Criando a instância de Order
 				return new Order(
 						UUID.randomUUID().toString(),
 						source.customerId(),
 						products,
-						BigDecimal.ZERO, // Total será calculado pelo método interno
-						OrderStatus.PENDING // Status inicial
+						BigDecimal.ZERO,
+						OrderStatus.PENDING
 				);
 			}
 		});
 
-		// ✅ Converter para Order -> OrderResponseDto
 		mapper.addConverter(new Converter<Order, OrderResponseDto>() {
 			@Override
 			public OrderResponseDto convert(MappingContext<Order, OrderResponseDto> context) {
 				Order source = context.getSource();
 
-				// Convertendo a lista de Product para ProductDto
 				List<ProductDto> products = source.getProducts().stream()
 						.map(product -> new ProductDto(
 								product.getProductId(),
@@ -71,7 +66,6 @@ public class ModelMapperConfig {
 								product.getQuantity()))
 						.toList();
 
-				// Criando a instância de OrderResponseDto
 				return new OrderResponseDto(
 						source.getId(),
 						source.getCustomerId(),
@@ -82,13 +76,11 @@ public class ModelMapperConfig {
 			}
 		});
 
-		// ✅ Converter para Order -> OrderEntity
 		mapper.addConverter(new Converter<Order, OrderEntity>() {
 			@Override
 			public OrderEntity convert(MappingContext<Order, OrderEntity> context) {
 				Order source = context.getSource();
 
-				// Convertendo a lista de Product para ProductEntity
 				List<ProductEntity> products = source.getProducts().stream()
 						.map(product -> new ProductEntity(
 								product.getProductId(),
@@ -97,7 +89,6 @@ public class ModelMapperConfig {
 								product.getQuantity()))
 						.toList();
 
-				// Criando a instância de OrderEntity
 				return new OrderEntity(
 						source.getId(),
 						source.getCustomerId(),
@@ -108,13 +99,11 @@ public class ModelMapperConfig {
 			}
 		});
 
-		// ✅ Converter para OrderEntity -> Order
 		mapper.addConverter(new Converter<OrderEntity, Order>() {
 			@Override
 			public Order convert(MappingContext<OrderEntity, Order> context) {
 				OrderEntity source = context.getSource();
 
-				// Convertendo a lista de ProductEntity para Product
 				List<Product> products = source.getProducts().stream()
 						.map(productEntity -> new Product(
 								productEntity.getId(),
@@ -123,7 +112,6 @@ public class ModelMapperConfig {
 								productEntity.getQuantity()))
 						.toList();
 
-				// Criando a instância de Order
 				return new Order(
 						source.getId(),
 						source.getCustomerId(),
