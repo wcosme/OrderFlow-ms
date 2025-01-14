@@ -1,0 +1,19 @@
+curl --location 'localhost:8080/orderflow/v1/orders' \
+--header 'Content-Type: application/json' \
+--data '{
+  "customerId": "customer-456",
+  "products": [
+    {
+      "productId": "product-001",
+      "productName": "Notebook Dell Inspiron",
+      "price": 1500.00,
+      "quantity": 10
+    },
+    {
+      "productId": "product-002",
+      "productName": "Mouse Gamer Logitech",
+      "price": 250.00,
+      "quantity": 10
+    }
+  ]
+}'
