@@ -6,6 +6,7 @@ import br.com.orderflow.application.port.input.usecase.CreateOrderUseCase;
 import br.com.orderflow.domain.entity.Order;
 import br.com.orderflow.infrastructure.persistence.repository.OrderPersistence;
 import br.com.orderflow.shared.exception.BusinessException;
+import br.com.orderflow.shared.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -21,9 +22,15 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
 
     @Override
     public OrderResponseDto createOrder(OrderRequestDto orderRequest) {
+        if (orderRequest.products() == null || orderRequest.products().isEmpty()) {
+            throw new BusinessException("O pedido deve conter pelo menos um produto.");
+        }
+
         Order order = modelMapper.map(orderRequest, Order.class);
         order.calculateTotalValue();
+
         orderPersistence.save(order);
+
         return modelMapper.map(order, OrderResponseDto.class);
     }
 
@@ -36,9 +43,8 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
     @Override
     public OrderResponseDto getOrderById(String id) {
         Order order = orderPersistence.findById(id)
-                .orElseThrow(() -> new BusinessException("Pedido não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido com ID " + id + " não encontrado."));
+
         return modelMapper.map(order, OrderResponseDto.class);
     }
 }
-
-

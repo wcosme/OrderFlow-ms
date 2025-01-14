@@ -8,6 +8,7 @@ import br.com.orderflow.domain.entity.Product;
 import br.com.orderflow.domain.enums.OrderStatus;
 import br.com.orderflow.infrastructure.persistence.repository.OrderPersistence;
 import br.com.orderflow.shared.exception.BusinessException;
+import br.com.orderflow.shared.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,15 +95,13 @@ class CreateOrderUseCaseImplTest {
 
     @Test
     void shouldReturnOrderByIdSuccessfully() {
-        // Arrange
+
         String orderId = "order-123";
         when(orderPersistence.findById(orderId)).thenReturn(Optional.of(testOrder));
         when(modelMapper.map(testOrder, OrderResponseDto.class)).thenReturn(testOrderResponseDto);
 
-        // Act
         OrderResponseDto result = createOrderUseCase.getOrderById(orderId);
 
-        // Assert
         assertNotNull(result);
         assertEquals("order-123", result.id());
         verify(orderPersistence, times(1)).findById(orderId);
@@ -109,29 +109,42 @@ class CreateOrderUseCaseImplTest {
 
     @Test
     void shouldThrowExceptionWhenOrderNotFound() {
-        // Arrange
+
         String orderId = "order-123";
         when(orderPersistence.findById(orderId)).thenReturn(Optional.empty());
 
-        // Act & Assert
-        assertThrows(BusinessException.class, () -> createOrderUseCase.getOrderById(orderId));
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            createOrderUseCase.getOrderById(orderId);
+        });
+
+        assertEquals("Pedido com ID order-123 não encontrado.", exception.getMessage());
         verify(orderPersistence, times(1)).findById(orderId);
     }
 
     @Test
     void shouldReturnAllOrdersSuccessfully() {
-        // Arrange
+
         Pageable pageable = Pageable.unpaged();
         Page<Order> ordersPage = new PageImpl<>(List.of(testOrder));
         when(orderPersistence.findAll(pageable)).thenReturn(ordersPage);
         when(modelMapper.map(any(Order.class), eq(OrderResponseDto.class))).thenReturn(testOrderResponseDto);
 
-        // Act
         Page<OrderResponseDto> result = createOrderUseCase.getAllOrders(pageable);
 
-        // Assert
         assertNotNull(result);
         assertFalse(result.isEmpty());
         verify(orderPersistence, times(1)).findAll(pageable);
     }
+
+    @Test
+    void shouldThrowBusinessExceptionWhenOrderHasNoProducts() {
+        OrderRequestDto emptyOrderRequest = new OrderRequestDto("customer-123", Collections.emptyList());
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            createOrderUseCase.createOrder(emptyOrderRequest);
+        });
+
+        assertEquals("O pedido deve conter pelo menos um produto.", exception.getMessage());
+    }
+
 }
