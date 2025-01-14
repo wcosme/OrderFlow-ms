@@ -6,15 +6,16 @@ spring:
 
 server:
   servlet:
-    context-path: "/${APPLICATION_PREFIX:orderflow/v1}"
+    context-path: "/orderflow/v1"
 
 logging:
   level:
     root: INFO
     org:
+      springdoc: DEBUG
       mongodb:
         driver: WARN
       apache: ERROR
       springframework:
-        web: ERROR
+        web: DEBUG
         boot: INFO
