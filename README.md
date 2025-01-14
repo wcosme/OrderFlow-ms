@@ -20,6 +20,48 @@ O projeto segue o padrão de **Arquitetura Hexagonal**, separando a lógica de n
 
 ---
 
+### 📚 **Práticas e Padrões Utilizados**
+- **Arquitetura Hexagonal (Ports & Adapters)**
+- **Clean Architecture**
+- **Domain-Driven Design (DDD)**
+- **Clean Code**
+- **SOLID Principles**
+- **Test-Driven Development (TDD)**
+
+---
+
+### 🔎 **Aplicação dos Princípios SOLID**
+#### **S - Single Responsibility Principle (Princípio da Responsabilidade Única)**
+Cada classe do projeto possui **uma única responsabilidade** bem definida. Por exemplo:
+- **`OrderService`**: Focado nas operações de pedidos (criação, consulta, etc.).
+- **`ProductService`**: Responsável pelas operações relacionadas a produtos.
+
+Essas responsabilidades estão separadas para evitar que uma única classe tenha múltiplos motivos para mudança.
+
+#### **O - Open/Closed Principle (Princípio Aberto/Fechado)**
+O sistema está projetado para ser **aberto para extensões e fechado para modificações**. Isso é possível graças ao uso de **interfaces (ports)** e **injeção de dependência**:
+- **Interfaces como `OrderPersistence` e `CreateOrderUseCase`** permitem adicionar novas implementações sem alterar o código existente.
+- Novos tipos de persistência ou novos casos de uso podem ser adicionados sem modificar as classes existentes.
+
+#### **L - Liskov Substitution Principle (Princípio da Substituição de Liskov)**
+O projeto segue o princípio de que **qualquer implementação de uma interface deve poder substituir sua interface base sem alterar o comportamento esperado**. Por exemplo:
+- As implementações de **`OrderPersistence`** podem ser trocadas (como salvar em MongoDB ou em um sistema de cache) sem que os casos de uso sejam afetados.
+
+#### **I - Interface Segregation Principle (Princípio da Segregação de Interfaces)**
+O sistema utiliza **interfaces específicas e coesas** para cada caso de uso. Por exemplo:
+- **`CreateOrderUseCase`**: Focado exclusivamente na criação de pedidos.
+- **`GetOrderUseCase`**: Responsável apenas pela consulta de pedidos.
+
+Isso evita que uma única interface tenha métodos que não são necessários para todos os seus implementadores.
+
+#### **D - Dependency Inversion Principle (Princípio da Inversão de Dependência)**
+O projeto utiliza **injeção de dependência** para garantir que as **camadas de alto nível (casos de uso)** não dependam diretamente das **camadas de baixo nível (infraestrutura)**. Por exemplo:
+- A classe **`CreateOrderUseCaseImpl`** recebe a dependência **`OrderPersistence`** como uma interface, permitindo trocar a implementação sem alterar a lógica de negócios.
+
+Essa abordagem facilita testes unitários e garante que o sistema seja mais flexível e fácil de manter.
+
+---
+
 ### 🚀 **Tecnologias Utilizadas**
 - **Java 17**
 - **Spring Boot**
@@ -102,7 +144,7 @@ O projeto segue o padrão de **Arquitetura Hexagonal**, separando a lógica de n
 ---
 
 ### 📊 **Banco de Dados Utilizado**
-Para esse projeto, foi escolhido o **MongoDB** como banco de dados principal, devido à sua flexibilidade e capacidade de armazenar documentos JSON. Além disso, o **Redis** será utilizado como um cache para melhorar a performance do sistema em consultas frequentes.
+Para esse projeto, foi escolhido o **MongoDB** como banco de dados principal, devido à sua flexibilidade e capacidade de armazenar documentos JSON. Além disso, o **Redis** é utilizado como um cache para melhorar a performance do sistema em consultas frequentes.
 
 ---
 
@@ -110,7 +152,6 @@ Para esse projeto, foi escolhido o **MongoDB** como banco de dados principal, de
 - Implementar autenticação com **Spring Security**
 - Configurar monitoramento com **Prometheus** e **Grafana**
 - **Integração com Kafka:** Implementar um fluxo assíncrono utilizando Apache Kafka para melhorar a escalabilidade e a resiliência do sistema.
-- **Integração com Redis:** Utilizar o Redis como cache para otimizar a performance e reduzir o tempo de resposta das consultas.
 
 ---
 
