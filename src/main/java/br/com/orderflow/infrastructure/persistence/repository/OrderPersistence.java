@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -18,7 +19,13 @@ public class OrderPersistence {
     public OrderPersistence(OrderRepository orderRepository, ModelMapper modelMapper) {
         this.orderRepository = orderRepository;
         this.modelMapper = modelMapper;
+    }
 
+    public List<Order> findByCustomerId(String customerId) {
+        return orderRepository.findByCustomerId(customerId)
+                .stream()
+                .map(orderEntity -> modelMapper.map(orderEntity, Order.class))
+                .toList();
     }
 
     public void save(Order order) {
@@ -35,4 +42,5 @@ public class OrderPersistence {
                 .map(entity -> modelMapper.map(entity, Order.class));
     }
 }
+
 

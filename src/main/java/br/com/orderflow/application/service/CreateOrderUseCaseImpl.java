@@ -1,9 +1,11 @@
 package br.com.orderflow.application.service;
 
+import br.com.orderflow.application.port.input.dto.ProductDto;
 import br.com.orderflow.application.port.input.dto.request.OrderRequestDto;
 import br.com.orderflow.application.port.input.dto.response.OrderResponseDto;
 import br.com.orderflow.application.port.input.usecase.CreateOrderUseCase;
 import br.com.orderflow.domain.entity.Order;
+import br.com.orderflow.domain.entity.Product;
 import br.com.orderflow.infrastructure.persistence.repository.OrderPersistence;
 import br.com.orderflow.shared.exception.BusinessException;
 import br.com.orderflow.shared.exception.ResourceNotFoundException;
@@ -12,6 +14,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.IntStream;
 
 @AllArgsConstructor
 @Service
@@ -26,9 +31,17 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
             throw new BusinessException("O pedido deve conter pelo menos um produto.");
         }
 
+        List<Order> existingOrders = orderPersistence.findByCustomerId(orderRequest.customerId());
+
+
+        for (Order existingOrder : existingOrders) {
+            if (hasSameProducts(existingOrder.getProducts(), orderRequest.products())) {
+                throw new BusinessException("Pedido duplicado: já existe um pedido com o mesmo cliente e produtos.");
+            }
+        }
+
         Order order = modelMapper.map(orderRequest, Order.class);
         order.calculateTotalValue();
-
         orderPersistence.save(order);
 
         return modelMapper.map(order, OrderResponseDto.class);
@@ -47,4 +60,15 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
 
         return modelMapper.map(order, OrderResponseDto.class);
     }
+
+
+    private boolean hasSameProducts(List<Product> existingProducts, List<ProductDto> newProducts) {
+        return existingProducts.size() == newProducts.size() &&
+                existingProducts.stream()
+                        .allMatch(product -> newProducts.stream()
+                                .anyMatch(dto -> product.getProductId().equals(dto.productId()) &&
+                                        product.getPrice().compareTo(dto.price()) == 0 &&
+                                        product.getQuantity() == dto.quantity()));
+    }
+
 }
